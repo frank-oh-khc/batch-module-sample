@@ -1,0 +1,5 @@
+rootProject.name = 'spring-batch-sample'
+
+include 'app:api'
+include 'app:batch'
+include 'domain:community'
