@@ -49,7 +49,7 @@ jobs:
 
       - name: Docker build, tag, and push image
         id: build-image
-        working-directory: ./batch
+        working-directory: ./app/batch
         run: |
           gcloud auth configure-docker asia-northeast3-docker.pkg.dev
           docker build -t $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG . \
