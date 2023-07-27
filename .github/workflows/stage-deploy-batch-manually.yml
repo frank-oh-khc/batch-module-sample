@@ -41,7 +41,7 @@ jobs:
         id: build-gradle
         run: |
           chmod +x gradlew
-          ./gradlew clean :batch:bootJar --parallel
+          ./gradlew clean :app:batch:bootJar --parallel
 
       - name: get shot sha
         run: |
