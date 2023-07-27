@@ -1,0 +1,58 @@
+name: Deploy batch stage manually
+
+on:
+  workflow_dispatch:
+
+env:
+  GAR_LOCATION: asia-northeast3-docker.pkg.dev
+  PROJECT_ID: durable-retina-389512
+  REPOSITORY: containers
+  IMAGE: batch-test
+  REGION: asia-northeast3
+
+jobs:
+  build:
+    name: Cloud Run Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3.3.0
+        with:
+          distribution: "adopt"
+          java-version: "17"
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS_STAGE }}'
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Gradle build
+        id: build-gradle
+        run: |
+          chmod +x gradlew
+          ./gradlew clean :batch:bootJar --parallel
+
+      - name: get shot sha
+        run: |
+          echo "IMAGE_TAG=default-${GITHUB_SHA::6}" >> $GITHUB_ENV
+
+      - name: Docker build, tag, and push image
+        id: build-image
+        working-directory: ./batch
+        run: |
+          gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+          docker build -t $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG . \
+          --build-arg VERSION="$IMAGE_TAG" \
+          docker tag $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG
+          docker push $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG
