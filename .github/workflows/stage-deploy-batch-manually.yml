@@ -54,5 +54,5 @@ jobs:
           gcloud auth configure-docker asia-northeast3-docker.pkg.dev
           docker build -t $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG . \
           --build-arg VERSION="$IMAGE_TAG"
-          docker tag $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG
+          docker tag $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:latest
           docker push $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG
