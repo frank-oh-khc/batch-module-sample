@@ -31,6 +31,7 @@ public class BatchJobSampleB {
         .tasklet(((contribution, chunkContext) -> {
           System.out.println("##########");
           System.out.println("sample B Step is called!!");
+          System.out.println("something is added");
           System.out.println("##########");
 
           feedService.doSomething();
