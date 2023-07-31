@@ -56,3 +56,5 @@ jobs:
           --build-arg VERSION="$IMAGE_TAG"
           docker tag $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:latest
           docker push $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:$IMAGE_TAG
+          docker push $GAR_LOCATION/$PROJECT_ID/$REPOSITORY/$IMAGE:latest
+          
